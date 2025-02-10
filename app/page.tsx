@@ -1,101 +1,166 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import axios from "axios";
+import ChooseFile from "@/components/chooseFile";
+import SideMenu from "@/components/Sidemenu";
+import TopBar from "@/components/Topbar";
+import TableData from "@/components/TableData";
+
+export interface FileData {
+  id: number;
+  name: string;
+  uploaded_at: string;
+}
+
+export interface TableRow {
+  id: number;
+  client: string;
+  group_code: string;
+  mailing_code: string;
+  mlg_desc: string;
+  mail_date: string;
+  offer: string;
+  offer_desc: string;
+  product: string;
+  product_desc: string;
+  category: string;
+  source: string;
+  mailing_list: string;
+  segment: string;
+  ship_qty: number;
+  mailed: number;
+  ror_net_percent: number;
+  printing_cost: number;
+  lists_cost: number;
+  postage_cost: number;
+  lettershop_cost: number;
+  dp_cost: number;
+  misc_cost: number;
+  total_mailing_cost: number;
+  mail_orders: number;
+  phone_orders: number;
+  web_orders: number;
+  gross_orders: number;
+  gross_percent: number;
+  net_orders: number;
+  net_percent: number;
+  ac: number;
+  active_subs: number;
+  inquirers: number;
+  backorders: number;
+  bo_amount: number;
+  percent_with_bo: number;
+  prod_amount: number;
+  x_sell_amount: number;
+  misc_amount: number;
+  non_cc_amount: number;
+  cc_amount: number;
+  auto_ships: number;
+  gross_sales: number;
+  refunds: number;
+  product_cost: number;
+  call_ctr: number;
+  merch_fee: number;
+  royalties: number;
+  total_cost: number;
+  net_profit_loss: number;
+  net_roi: number;
+  percent_breakeven: number;
+  be_orders: number;
+  net_per_piece: number;
+  avg_order: number;
+  avg_with_autoship: number;
+  avg_turns: number;
+  mlg_cost: number;
+  net_pl_order: number;
+  avg_with_autoship_2: number;
+  nsf_count: number;
+  days: number;
+  aov: number;
+  be_aov: number;
+  lt_aov: number;
+  qty_mailed: number;
+  ntf_buyers: number;
+  fe_cost: number;
+  fe_cpo: number;
+  fe_purch: number;
+  fe_aov: number;
+  fe_roi: number;
+  subs_percent: number;
+  be_orders_2: number;
+  be_mlg_qty: number;
+  be_cost: number;
+  be_cpo: number;
+  be_purch: number;
+  be_aov_last: number;
+  tot_purch: number;
+  tot_cost: number;
+  net_pl: number;
+  lt_roi: number;
+  pl_per_buyers: number;
+  delta: number;
+  pl_per_buyer_total: number;
+  action: string;
+  uploaded_file: number;
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [files, setFiles] = useState<FileData[]>([]);
+  const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [tableData, setTableData] = useState<TableRow[]>([]);
+  const [tableLoading, setTableLoading] = useState(false);
+  const [filterQuery, setFilterQuery] = useState<string>("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  // Fetch files from backend
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}files`);
+        setFiles(response.data);
+      } catch (error) {
+        console.error("Error fetching files:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFiles();
+  }, []);
+
+  // Fetch table data when file or filters change
+  useEffect(() => {
+    if (!selectedFile) {
+      setTableData([]);
+      return;
+    }
+
+    const fetchTableData = async () => {
+      setTableLoading(true);
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}filter?uploaded_file=${selectedFile.id}&${filterQuery}`
+        );
+        setTableData(response.data);
+      } catch (error) {
+        console.error("Error fetching table data:", error);
+      } finally {
+        setTableLoading(false);
+      }
+    };
+
+    fetchTableData();
+  }, [selectedFile, filterQuery]);
+
+  return (
+    <div className="bg-backgroundLight flex min-h-screen relative">
+      <SideMenu onFilterChange={setFilterQuery} />
+      <div className="flex-grow">
+        <TopBar />
+        <ChooseFile files={files} selectedFile={selectedFile} loading={loading} onFileChange={setSelectedFile} />
+        <TableData data={tableData} loading={tableLoading} />
+      </div>
     </div>
   );
 }
