@@ -197,7 +197,7 @@ export default function Home() {
 
   return (
     <div className="bg-backgroundLight flex min-h-screen relative pb-[5rem]">
-      <SideMenu onFilterChange={setFilterQuery} />
+      <SideMenu onFilterChange={setFilterQuery} selectedFileId={selectedFile?.id}/>
       <div className="flex-grow">
         <TopBar />
         <div className="mx-2 flex justify-between items-center x">

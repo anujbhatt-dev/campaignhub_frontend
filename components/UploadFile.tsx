@@ -31,7 +31,8 @@ const UploadFile = ({ isUploadFile, setIsUploadFile }: UploadFileI) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("name", fileName);
-
+    console.log(formData);
+    
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}upload/`, formData, {
         headers: {
@@ -39,7 +40,8 @@ const UploadFile = ({ isUploadFile, setIsUploadFile }: UploadFileI) => {
         },
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
+        setIsUploadFile(false)
         alert("File uploaded successfully!");
       } else {
         alert("Failed to upload file.");

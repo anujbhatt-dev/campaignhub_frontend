@@ -10,7 +10,7 @@ interface FiltersI{
 }
 
 
-const SideMenu = ({ onFilterChange }: { onFilterChange: (query: string) => void }) => {
+const SideMenu = ({ onFilterChange, selectedFileId }: { onFilterChange: (query: string) => void ,selectedFileId?:number }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string }>({});
   const [filterData, setFilterData] = useState<FiltersI[] | null>(null);
@@ -30,7 +30,7 @@ const SideMenu = ({ onFilterChange }: { onFilterChange: (query: string) => void 
   useEffect(() => {
     const fetchFilters = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}file/1/unique-values/`);
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}file/${selectedFileId}/unique-values/`);
         if (res) {
           setFilterData(res.data);
         }
@@ -38,8 +38,9 @@ const SideMenu = ({ onFilterChange }: { onFilterChange: (query: string) => void 
         console.error("Error fetching filters:", error);
       }
     };
-    fetchFilters();
-  }, []);
+    if(selectedFileId)
+      fetchFilters();
+  }, [selectedFileId]);
 
   return (
     <div className="flex sticky top-0 left-0">
