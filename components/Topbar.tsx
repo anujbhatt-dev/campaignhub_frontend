@@ -19,7 +19,7 @@ export default function TopBar() {
   };
 
   return (
-    <header className="bg-background border-b border-foreground px-6 py-4 flex items-center justify-between">
+    <header className="bg-background border-b border-foreground px-6 py-4 flex items-center justify-between h-[4.5rem]">
       {/* Logo / Title */}
       <div className="text-xl font-semibold text-foreground">Campaign Dashboard</div>
 

@@ -21,10 +21,10 @@ const SideMenu = ({ onFilterChange }: { onFilterChange: (query: string) => void 
     
     // Convert filters to query string
     const query = Object.entries(updatedFilters)
-      .map(([key, val]) => `${key}=${val}`)
+      .map(([key, val]) => `${key.toLowerCase()}=${val}`)
       .join("&");
 
-    onFilterChange(query.toLowerCase());
+    onFilterChange(query);
   };
 
   useEffect(() => {
@@ -42,9 +42,10 @@ const SideMenu = ({ onFilterChange }: { onFilterChange: (query: string) => void 
   }, []);
 
   return (
-    <div className="flex">
+    <div className="flex sticky top-0 left-0">
       {/* Sidebar */}
       <div className={`bg-backgroundLight w-64 h-screen border-r transition-transform ${isOpen ? "translate-x-0" : "-translate-x-64"} md:translate-x-0`}>
+        <div className="h-[4.5rem] border-b"></div>
         <div className="p-5 flex justify-between items-center">
           <h2 className="text-lg font-semibold">Filters</h2>
           <button className="md:hidden" onClick={() => setIsOpen(false)}>
@@ -55,10 +56,10 @@ const SideMenu = ({ onFilterChange }: { onFilterChange: (query: string) => void 
         {/* Filter Section */}
         <div className="p-4 space-y-4">
           {filterData && filterData.map((filter) => (
-            <div key={filter.label}>
-              <label className="block font-medium text-sm">{filter.label}</label>
+            <div key={filter.label} className="p-2 bg-zinc-200 rounded-lg shadow-sm">
+              <label className="block text-sm uppercase ml-2 font-bold">{filter.label}</label>
               <select
-                className="w-full mt-1 p-2 border rounded-md bg-white"
+                className="w-full mt-1 p-2 rounded-md bg-zinc-100 shadow-md text-[0.8rem]"
                 onChange={(e) => handleFilterChange(filter.label, e.target.value)}
                 value={selectedFilters[filter.label] || ""}
               >

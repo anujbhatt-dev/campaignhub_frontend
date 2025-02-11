@@ -6,6 +6,12 @@ import ChooseFile from "@/components/chooseFile";
 import SideMenu from "@/components/Sidemenu";
 import TopBar from "@/components/Topbar";
 import TableData from "@/components/TableData";
+import UploadFile from "@/components/UploadFile";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import MonthlyResultData from "@/components/MonthlyResultData";
+import SalesCostLineChart from "@/components/SalesCostLineChart";
+import ScatterPlot from "@/components/ScatterPlot";
+import MonthlySalesExpensesChart from "@/components/MonthlySalesExpensesChart";
 
 export interface FileData {
   id: number;
@@ -105,19 +111,50 @@ export interface TableRow {
   uploaded_file: number;
 }
 
+export interface MonthlyResultRow {
+  id: number;
+  campaign_count: number;
+  shipped: number;
+  mailed: number;
+  days_since_making: number;
+  ror_percent: number;
+  mail_order: number;
+  phone_order: number;
+  web_order: number;
+  backorder: number;
+  total_order: number;
+  cost: number;
+  sales: number;
+  net_sales: number;
+  refund_count: number;
+  refunds: number;
+  profit: number;
+  gross_orders: number;
+  year:number,
+  month:number
+}
+
+
 export default function Home() {
   const [files, setFiles] = useState<FileData[]>([]);
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState<TableRow[]>([]);
   const [tableLoading, setTableLoading] = useState(false);
+  const [monthlyResultData, setMonthlyResultData] = useState<MonthlyResultRow[]>([]);
+  const [monthlyResultLoading, setMonthlyResultLoading] = useState(false);
   const [filterQuery, setFilterQuery] = useState<string>("");
+  const [isUploadFile,setIsUploadFile] = useState(false);
+
+
+  
 
   // Fetch files from backend
   useEffect(() => {
     const fetchFiles = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}files`);
+        
         setFiles(response.data);
       } catch (error) {
         console.error("Error fetching files:", error);
@@ -142,7 +179,12 @@ export default function Home() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BASE_URL}filter?uploaded_file=${selectedFile.id}&${filterQuery}`
         );
+        const response2 = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}aggregate/${selectedFile.id}/`
+        );
+        console.log(response2);
         setTableData(response.data);
+        setMonthlyResultData(response2.data)
       } catch (error) {
         console.error("Error fetching table data:", error);
       } finally {
@@ -154,13 +196,33 @@ export default function Home() {
   }, [selectedFile, filterQuery]);
 
   return (
-    <div className="bg-backgroundLight flex min-h-screen relative">
+    <div className="bg-backgroundLight flex min-h-screen relative pb-[5rem]">
       <SideMenu onFilterChange={setFilterQuery} />
       <div className="flex-grow">
         <TopBar />
-        <ChooseFile files={files} selectedFile={selectedFile} loading={loading} onFileChange={setSelectedFile} />
+        <div className="mx-2 flex justify-between items-center x">
+          <ChooseFile files={files} selectedFile={selectedFile} loading={loading} onFileChange={setSelectedFile} />
+          <button onClick={()=>setIsUploadFile(true)} className=" flex gap-2 font-semibold justify-center items-center bg-blue-500 p-2 rounded-lg text-white border-2 border-black/40 px-8">
+          <PlusIcon className="h-6 w-6 text-white" /><span>Add</span>
+          </button>
+        </div>
+        {/* <SalesCostLineChart data={monthlyResultData}/> */}
+        <div className="m-2">
+
+        
+
+        </div>
         <TableData data={tableData} loading={tableLoading} />
+        <MonthlyResultData data={monthlyResultData} loading={monthlyResultLoading}/>
+        {tableData.length!=0 &&<>
+          <ScatterPlot data={tableData}/>        
+          <MonthlySalesExpensesChart data={monthlyResultData}/>
+          </>
+        }
       </div>
+        {isUploadFile &&
+        <UploadFile isUploadFile={isUploadFile} setIsUploadFile={setIsUploadFile}/>
+        }
     </div>
   );
 }

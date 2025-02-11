@@ -37,6 +37,24 @@ export default {
         // Using custom CSS variables for theme colors
         background: "var(--background)", // Define custom theme background
         foreground: "var(--foreground)", // Define custom theme foreground
+
+        // Button Colors
+        buttonPrimary: "#3B82F6", // Vibrant Blue for primary buttons
+        buttonSecondary: "#10B981", // Green for secondary buttons
+        buttonDisabled: "#D1D5DB", // Light gray for disabled buttons
+
+        // Button Text Colors
+        buttonTextPrimary: "#FFFFFF", // White text on primary buttons
+        buttonTextSecondary: "#FFFFFF", // White text on secondary buttons
+        buttonTextDisabled: "#6B7280", // Gray text on disabled buttons
+
+        // Select Colors
+        selectBackground: "#F3F4F6", // Light background for selects
+        selectBackgroundDark: "#1F2937", // Dark background for selects in dark mode
+        selectText: "#111827", // Dark text for selects in light mode
+        selectTextDark: "#F3F4F6", // Light text for selects in dark mode
+        selectBorder: "#D1D5DB", // Border color for selects
+        selectBorderDark: "#4B5563", // Dark border color for selects in dark mode
       },
       fontFamily: {
         sans: ["Inter", "Arial", "sans-serif"], // Default font family

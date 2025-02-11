@@ -12,20 +12,20 @@ interface ChooseFileProps {
 
 const ChooseFile: FC<ChooseFileProps> = ({ files, selectedFile, loading, onFileChange }) => {
   return (
-    <div className="w-full max-w-md mx-auto p-4 bg-background shadow-md rounded-md">
-      <h2 className="text-lg font-semibold mb-2">Choose a File</h2>
+    <div className="w-[20rem] max-w-md bg-zinc-200 p-4 rounded-md mt-4 border border-black/10 shadow-lg">
+      <h2 className="font-semibold mb-1 opacity-90">Choose a File</h2>
 
       {loading ? (
         <p className="text-gray-500">Loading files...</p>
       ) : (
         <select
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full p-2 rounded-md focus:outline-none bg-zinc-50 text-sm"
           onChange={(e) => {
             const file = files.find((f) => f.id === Number(e.target.value));
             onFileChange(file || null);
           }}
         >
-          <option value="">Select a file</option>
+          <option className="bg-zinc-50" value="">Select a file</option>
           {files.map((file) => (
             <option key={file.id} value={file.id}>
               {file.name} - {new Date(file.uploaded_at).toLocaleDateString()}
@@ -35,9 +35,9 @@ const ChooseFile: FC<ChooseFileProps> = ({ files, selectedFile, loading, onFileC
       )}
 
       {selectedFile && (
-        <div className="mt-4 p-2 bg-foreground text-background rounded-md">
-          <p>📄 <strong>{selectedFile.name}</strong></p>
-          <p>🗓 Uploaded: {new Date(selectedFile.uploaded_at).toLocaleDateString()}</p>
+        <div className="mt-2 p-2 rounded-md flex bg-green text-white text-[0.8rem] justify-between items-center ">
+          <p className=" text-[0.9rem] tracking-wide"><strong>{selectedFile.name}</strong></p>
+          <p className="opacity-80 ">{new Date(selectedFile.uploaded_at).toLocaleDateString()}</p>
         </div>
       )}
     </div>
