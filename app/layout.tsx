@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+const poppins = Poppins({
+  weight:["100","200","300","400","500","600","700","800","900"]
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden `}
+        className={`${poppins.className} ${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden `}
       >
         <ToastContainer position="top-right" autoClose={3000} />
         {children}
