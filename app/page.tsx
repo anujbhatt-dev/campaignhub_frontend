@@ -4,16 +4,20 @@ import "react-toastify/dist/ReactToastify.css";
 import ChooseFile from "@/components/chooseFile";
 import SideMenu from "@/components/Sidemenu";
 import TopBar from "@/components/Topbar";
-import TableData from "@/components/TableData";
+// import TableData from "@/components/TableData";
 import UploadFile from "@/components/UploadFile";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import MonthlyResultData from "@/components/MonthlyResultData";
+// import MonthlyResultData from "@/components/MonthlyResultData";
 import ScatterPlot from "@/components/ScatterPlot";
 import MonthlySalesExpensesChart from "@/components/MonthlySalesExpensesChart";
 import { FileData } from "@/types/types";
 import { useFiles } from "@/hooks/useFiles";
 import { useTableData } from "@/hooks/useTableData";
 import { useUploadFile } from "@/hooks/useUploadFile";
+import { Suspense, lazy } from "react";
+
+const TableData = lazy(() => import("@/components/TableData"));
+const MonthlyResultData = lazy(() => import("@/components/MonthlyResultData"));
 
 export default function Home() {
   const { files, loading } = useFiles();
@@ -83,8 +87,8 @@ export default function Home() {
         <TopBar toggleSidemenu={toggleSideMenu} />
         <div className="mx-2 flex justify-between items-center lg:items-start lg:flex-row flex-col-reverse gap-2 my-2">
           <ChooseFile files={files} selectedFile={selectedFile} loading={loading} onFileChange={setSelectedFile} />
-          <div className="flex gap-x-6 justify-between items-center">
-              <div><div className="text-zinc-500 text-sm">Tolal Files  <span className="font-semibold text-black text-xl">{files.length}</span></div></div>
+          <div className="flex gap-x-6 justify-between items-baseline">
+              <div className="text-zinc-500 text-sm">Tolal Files  <span className="font-semibold text-black text-xl">{files.length}</span></div>
               <button
                 onClick={toggleUploadFile}
                 className="flex gap-2 font-semibold justify-center items-center bg-green/90 hover:bg-green transition-all duration-75 hover:animate-shake p-2 rounded-full lg:rounded-lg text-white border-2 border-black/40 lg:px-4"
@@ -96,13 +100,19 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col items-center">
-          <TableData isOpen={isOpen} data={memoizedTableData} loading={tableLoading} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <TableData isOpen={isOpen} data={memoizedTableData} loading={tableLoading} />            
+          </Suspense>
+          {/* <TableData isOpen={isOpen} data={memoizedTableData} loading={tableLoading} /> */}
           {memoizedTableData.length !== 0 && (
             <div className="">
               <ScatterPlot data={memoizedTableData} />              
             </div>
           )}
-          <MonthlyResultData isOpen={isOpen} data={memoizedMonthlyData} loading={monthlyResultLoading} />
+          <Suspense fallback={<div>Loading...</div>}>            
+            <MonthlyResultData isOpen={isOpen} data={memoizedMonthlyData} loading={monthlyResultLoading} />
+          </Suspense>
+          {/* <MonthlyResultData isOpen={isOpen} data={memoizedMonthlyData} loading={monthlyResultLoading} /> */}
           {memoizedTableData.length !== 0 && (
             <div className="">
               <MonthlySalesExpensesChart data={memoizedMonthlyData} />

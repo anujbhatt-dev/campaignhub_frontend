@@ -54,7 +54,7 @@ const MonthlyResultData: FC<MonthlyResultDataProps> = ({ data, loading, isOpen }
   );
 
   return (
-    <div className={`mt-4 p-4 bg-background border border-black/10 rounded-md overflow-x-auto mx-2 relative mb-4 min-h-[50vh] shadow-sm ${isOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-2rem)]"}  scrollbar-thin scrollbar-thumb-zinc-900/20 scrollbar-thumb-rounded-xl scrollbar-track-zinc-100`} >
+    <div className={`mt-4 p-4 bg-background border border-black/10 rounded-md overflow-x-auto overflow-hidden mx-2 relative mb-4 min-h-[50vh] shadow-sm ${isOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-2rem)]"}  scrollbar-thin scrollbar-thumb-zinc-900/20 scrollbar-thumb-rounded-xl scrollbar-track-zinc-100`} >
       <h2 className="text-3xl font-semibold mb-2">Monthly Campaign Results</h2>
 
       {loading ? (

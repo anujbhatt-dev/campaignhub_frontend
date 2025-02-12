@@ -11,7 +11,7 @@ interface TableDataProps {
 
 const TableData: FC<TableDataProps> = ({ data, loading, isOpen }) => {
   return (
-    <div className={`mt-4 p-4 bg-background border border-black/10 rounded-md overflow-x-auto h-[70vh] mx-2 relative mb-4 shadow-sm ${isOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-2rem)]"} `}>
+    <div className={`mt-4 p-4 bg-background border border-black/10 rounded-md overflow-x-auto overflow-hidden h-[70vh] mx-2 relative mb-4 shadow-sm ${isOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-2rem)]"} `}>
       <h2 className="text-3xl font-semibold mb-2">File Data</h2>
 
       {loading ? (
