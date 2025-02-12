@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# CampaignHub Frontend
 
-First, run the development server:
+This project is the frontend application for **CampaignHub**, built using **Next.js**. It provides a smooth and responsive UI for data visualization, filtering, and more.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**GitHub Repository**: [CampaignHub Frontend](https://github.com/anujbhatt-dev/campaignhub_frontend.git)
+
+## Features
+
+- File upload functionality
+- Data rendering in tables with filters
+- Data visualization using D3.js
+- Responsive design for mobile and desktop
+- Animated sidebar with framer-motion
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- Node.js (version >= 14.x)
+- npm (version >= 7.x)
+
+## Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/anujbhatt-dev/campaignhub_frontend.git
+   cd campaignhub_frontend
+   ```
+
+2. Install the dependencies using npm:
+   ```
+   npm install --legacy-peer-deps
+   ```
+   The `--legacy-peer-deps` flag ensures compatibility with certain peer dependencies that might not match the current version.
+
+3. Rename `.env.example` to `.env`:
+   ```
+   mv .env.example .env
+   ```
+   This file contains the necessary environment variables for your application.
+
+## Running the Development Server
+
+After installing the dependencies, you can run the development server:
 ```
+npm run dev
+```
+This will start the development server at `http://localhost:3000`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
