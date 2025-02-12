@@ -1,15 +1,16 @@
 "use client";
 
 import { FC } from "react";
-import { MonthlyResultRow } from "@/app/page";
 import { getMonthName } from "@/utils/getMonthName";
+import { MonthlyResultRow } from "@/types/types";
 
 interface MonthlyResultDataProps {
   data: MonthlyResultRow[];
   loading: boolean;
+  isOpen:boolean
 }
 
-const MonthlyResultData: FC<MonthlyResultDataProps> = ({ data, loading }) => {
+const MonthlyResultData: FC<MonthlyResultDataProps> = ({ data, loading, isOpen }) => {
   const total = data.reduce(
     (acc, row) => {
       acc.campaign_count += row.campaign_count;
@@ -53,11 +54,15 @@ const MonthlyResultData: FC<MonthlyResultDataProps> = ({ data, loading }) => {
   );
 
   return (
-    <div className="mt-4 p-4 bg-background border border-black/10 rounded-md overflow-x-auto mx-2 relative mb-4 min-h-[50vh] shadow-sm w-[calc(100vw-18rem)]" >
-      <h2 className="text-sm font-semibold mb-2">Monthly Campaign Results</h2>
+    <div className={`mt-4 p-4 bg-background border border-black/10 rounded-md overflow-x-auto mx-2 relative mb-4 min-h-[50vh] shadow-sm ${isOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-2rem)]"}  scrollbar-thin scrollbar-thumb-zinc-900/20 scrollbar-thumb-rounded-xl scrollbar-track-zinc-100`} >
+      <h2 className="text-3xl font-semibold mb-2">Monthly Campaign Results</h2>
 
       {loading ? (
-        <p className="text-gray-500 absolute top-[50%] left-[50%] -translate-x-[50%]">Loading data...</p>
+        <div className="text-gray-500 absolute top-[50%] left-[50%] -translate-x-[50%]">
+        <div className="h-[2.5rem] w-[2.5rem] border-4 border-zinc-400 border-b-zinc-600 rounded-full animate-spin">
+
+        </div>
+    </div>
       ) : data.length === 0 ? (
         <p className="text-gray-500 absolute top-[50%] left-[50%] -translate-x-[50%]">No data available.</p>
       ) : (
@@ -113,6 +118,8 @@ const MonthlyResultData: FC<MonthlyResultDataProps> = ({ data, loading }) => {
             ))}
             <tr className="border hover:bg-gray-100 dark:hover:bg-gray-800 font-bold tracking-wider">
               <th className="border px-4 py-2">Total</th>
+              <th className="border px-4 py-2"></th>
+              <th className="border px-4 py-2"></th>
               <td className="border px-4 py-2">{total.campaign_count}</td>
               <td className="border px-4 py-2">{total.shipped}</td>
               <td className="border px-4 py-2">{total.mailed}</td>

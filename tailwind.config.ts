@@ -9,6 +9,25 @@ export default {
   darkMode: "class", // Enable dark mode using the 'class' strategy
   theme: {
     extend: {
+      animation: {
+        shake: 'shake 0.25s ease-in-out',
+      },
+      keyframes: {
+        shake: {
+          '0%, 100%': {
+            transform: 'translateX(0)',
+          },
+          '25%': {
+            transform: 'translateX(-4px)',
+          },
+          '50%': {
+            transform: 'translateX(4px)',
+          },
+          '75%': {
+            transform: 'translateX(-4px)',
+          },
+        },
+      },
       colors: {
         // Primary colors
         primaryBlue: "#1E3A8A", // Dark Blue
@@ -61,5 +80,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar')],
 } satisfies Config;

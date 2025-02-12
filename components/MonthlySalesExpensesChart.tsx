@@ -1,7 +1,7 @@
-import { MonthlyResultRow } from '@/app/page'
 import { getMonthName } from '@/utils/getMonthName'
 import React, { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
+import { MonthlyResultRow } from '@/types/types'
 
 export default function MonthlySalesExpensesChart({ data }: { data: MonthlyResultRow[] }) {
   const svgRef = useRef<SVGSVGElement | null>(null)
@@ -9,7 +9,7 @@ export default function MonthlySalesExpensesChart({ data }: { data: MonthlyResul
   useEffect(() => {
     const sanitizedData = data.map(item => ({
       month: getMonthName(item.month),
-      sales: item.net_sales,
+      sales: item.sales,
       expenses: item.cost,
     }))
 
@@ -27,7 +27,7 @@ export default function MonthlySalesExpensesChart({ data }: { data: MonthlyResul
       .style('padding-bottom', '0.5rem')
 
     // Set margins and inner chart area
-    const margin = { top: 20, right: 30, bottom: 80, left: 80 }
+    const margin = { top: 20, right: 120, bottom: 80, left: 80 } // Increased right margin for legend
     const chartWidth = width - margin.left - margin.right
     const chartHeight = height - margin.top - margin.bottom
 
@@ -46,7 +46,7 @@ export default function MonthlySalesExpensesChart({ data }: { data: MonthlyResul
       .nice()
       .range([chartHeight, 0])
 
-    // Add bars for sales
+    // Add bars for sales (blue)
     g.selectAll('.sales-bar')
       .data(sanitizedData)
       .enter()
@@ -56,9 +56,9 @@ export default function MonthlySalesExpensesChart({ data }: { data: MonthlyResul
       .attr('y', d => yScale(d.sales))
       .attr('width', xScale.bandwidth())
       .attr('height', d => chartHeight - yScale(d.sales))
-      .attr('fill', 'steelblue')
+      .attr('fill', 'steelblue') // Color representing sales
 
-    // Add bars for expenses
+    // Add bars for expenses (orange)
     g.selectAll('.expenses-bar')
       .data(sanitizedData)
       .enter()
@@ -68,7 +68,7 @@ export default function MonthlySalesExpensesChart({ data }: { data: MonthlyResul
       .attr('y', d => yScale(d.expenses))
       .attr('width', xScale.bandwidth() / 2) // Smaller width for expenses bars
       .attr('height', d => chartHeight - yScale(d.expenses))
-      .attr('fill', 'orange')
+      .attr('fill', 'orange') // Color representing expenses
 
     // Add X axis
     g.append('g')
@@ -92,10 +92,37 @@ export default function MonthlySalesExpensesChart({ data }: { data: MonthlyResul
       .style('text-anchor', 'middle')
       .text('Amount')
 
+    // Add legend to top-right corner
+    const legend = svg.append('g')
+      .attr('transform', `translate(${width - margin.right + 10}, 20)`)
+
+    legend.append('rect')
+      .attr('width', 20)
+      .attr('height', 20)
+      .attr('fill', 'steelblue')
+
+    legend.append('text')
+      .attr('x', 30)
+      .attr('y', 15)
+      .style('font-size', '14px')
+      .text('Sales')
+
+    legend.append('rect')
+      .attr('width', 20)
+      .attr('height', 20)
+      .attr('fill', 'orange')
+      .attr('y', 30)
+
+    legend.append('text')
+      .attr('x', 30)
+      .attr('y', 45)
+      .style('font-size', '14px')
+      .text('Expenses')
+
   }, [data])
 
   return (
-    <div className="flex flex-col justify-center items-center mt-[10rem]">
+    <div className="flex flex-col justify-center items-center my-[5rem]">
       <h1 className="text-xl font-semibold text-center mb-4">Monthly Sales vs. Expenses</h1>
       <svg className='m-2 rounded-lg overflow-hidden shadow-sm' ref={svgRef}></svg>
     </div>

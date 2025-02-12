@@ -1,30 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { XMarkIcon } from "@heroicons/react/24/outline"; // HeroIcon for clear button
 
-interface FiltersI{
+interface FiltersI {
   label: string;
   options: string[];
 }
 
-
-const SideMenu = ({ onFilterChange, selectedFileId }: { onFilterChange: (query: string) => void ,selectedFileId?:number }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const SideMenu = ({ onFilterChange, selectedFileId, isOpen }: { onFilterChange: (query: string) => void, selectedFileId?: number, isOpen: boolean }) => {
   const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string }>({});
   const [filterData, setFilterData] = useState<FiltersI[] | null>(null);
 
   const handleFilterChange = (category: string, value: string) => {
     const updatedFilters = { ...selectedFilters, [category]: value };
     setSelectedFilters(updatedFilters);
-    
+
+    // Save updated filters to localStorage
+    localStorage.setItem("selectedFilters", JSON.stringify(updatedFilters));
+
     // Convert filters to query string
     const query = Object.entries(updatedFilters)
       .map(([key, val]) => `${key.toLowerCase()}=${val}`)
       .join("&");
 
     onFilterChange(query);
+  };
+
+  const handleClearFilters = () => {
+    setSelectedFilters({});
+    localStorage.removeItem("selectedFilters");
+    onFilterChange(""); // Clear the query
   };
 
   useEffect(() => {
@@ -38,52 +46,72 @@ const SideMenu = ({ onFilterChange, selectedFileId }: { onFilterChange: (query: 
         console.error("Error fetching filters:", error);
       }
     };
-    if(selectedFileId)
-      fetchFilters();
+    if (selectedFileId) fetchFilters();
   }, [selectedFileId]);
 
+  useEffect(() => {
+    // Load filters from localStorage when the component mounts
+    const storedFilters = localStorage.getItem("selectedFilters");
+    if (storedFilters) {
+      const parsedFilters = JSON.parse(storedFilters);
+      setSelectedFilters(parsedFilters);
+
+      // Call onFilterChange with the loaded filters to update the table
+      const query = Object.entries(parsedFilters)
+        .map(([key, val]) => `${key.toLowerCase()}=${val}`)
+        .join("&");
+
+      onFilterChange(query);
+    }
+  }, [onFilterChange]);
+
   return (
-    <div className="flex sticky top-0 left-0">
-      {/* Sidebar */}
-      <div className={`bg-backgroundLight w-64 h-screen border-r transition-transform ${isOpen ? "translate-x-0" : "-translate-x-64"} md:translate-x-0`}>
-        <div className="h-[4.5rem] border-b"></div>
-        <div className="p-5 flex justify-between items-center">
+    isOpen &&
+    <div className="flex sticky top-0 left-0 border-r border-black">
+      <div className="bg-backgroundLight w-64 h-screen border-r">
+        <div className="p-5 flex justify-between items-center h-[4.5rem] border-b border-black">
           <h2 className="text-lg font-semibold">Filters</h2>
-          <button className="md:hidden" onClick={() => setIsOpen(false)}>
-            <XMarkIcon className="h-6 w-6" />
-          </button>
+          {/* Conditionally render the Clear button if there are selected filters */}
+          {Object.keys(selectedFilters).length > 0 && (
+            <button
+              onClick={handleClearFilters}
+              className="text-white  p-2 flex gap-x-1 items-center justify-between text-[0.8rem] bg-zinc-600 hover:bg-zinc-900 transition-all duration-75 rounded "
+              title="Clear Filters"
+            >
+              Clear all filter <XMarkIcon className="h-3 w-3" />
+            </button>
+          )}
         </div>
 
-        {/* Filter Section */}
-        <div className="p-4 space-y-4">
-          {filterData && filterData.map((filter) => (
-            <div key={filter.label} className="p-2 bg-zinc-200 rounded-lg shadow-sm">
-              <label className="block text-sm uppercase ml-2 font-bold">{filter.label}</label>
-              <select
-                className="w-full mt-1 p-2 rounded-md bg-zinc-100 shadow-md text-[0.8rem]"
-                onChange={(e) => handleFilterChange(filter.label, e.target.value)}
-                value={selectedFilters[filter.label] || ""}
-              >
-                <option value="">Select {filter.label}</option>
-                {filter.options.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
-        </div>
-
+        {selectedFileId && (
+          <div className="m-2 space-y-4">
+            {filterData &&
+              filterData.map((filter) => (
+                <motion.div
+                  key={filter.label}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                  className="p-2 bg-zinc-200 rounded-lg shadow-sm"
+                >
+                  <label className="block text-sm uppercase ml-2 font-bold">{filter.label}</label>
+                  <select
+                    className="w-full mt-1 p-2 rounded-md bg-zinc-100 shadow-md text-[0.8rem]"
+                    onChange={(e) => handleFilterChange(filter.label, e.target.value)}
+                    value={selectedFilters[filter.label] || ""}
+                  >
+                    <option value="">Select {filter.label}</option>
+                    {filter.options.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </motion.div>
+              ))}
+          </div>
+        )}
       </div>
-
-      {/* Hamburger Icon for Mobile */}
-      <button className="fixed top-4 left-4 md:hidden z-50" onClick={() => setIsOpen(true)}>
-        <Bars3Icon className="h-6 w-6 text-foreground" />
-      </button>
-
-      {/* Overlay when sidebar is open on mobile */}
-      {isOpen && <div className="fixed inset-0 bg-black/50 md:hidden" onClick={() => setIsOpen(false)}></div>}
     </div>
   );
 };

@@ -1,24 +1,29 @@
 "use client";
 
+import { TableRow } from "@/types/types";
 import { FC } from "react";
-import { TableRow } from "@/app/page";
 
 interface TableDataProps {
   data: TableRow[];
   loading: boolean;
+  isOpen:boolean
 }
 
-const TableData: FC<TableDataProps> = ({ data, loading }) => {
+const TableData: FC<TableDataProps> = ({ data, loading, isOpen }) => {
   return (
-    <div className="mt-4 p-4 bg-background border border-black/10 rounded-md overflow-x-auto h-[70vh] mx-2 relative mb-4 shadow-sm w-[calc(100vw-18rem)]">
-      <h2 className="text-sm font-semibold mb-2">File Data</h2>
+    <div className={`mt-4 p-4 bg-background border border-black/10 rounded-md overflow-x-auto h-[70vh] mx-2 relative mb-4 shadow-sm ${isOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-2rem)]"} `}>
+      <h2 className="text-3xl font-semibold mb-2">File Data</h2>
 
       {loading ? (
-        <p className="text-gray-500 absolute top-[50%] left-[50%] -translate-x-[50%]">Loading data...</p>
+        <div className="text-gray-500 absolute top-[50%] left-[50%] -translate-x-[50%]">
+            <div className="h-[2.5rem] w-[2.5rem] border-4 border-zinc-400 border-b-zinc-600 rounded-full animate-spin">
+
+            </div>
+        </div>
       ) : data.length === 0 ? (
         <p className="text-gray-500 absolute top-[50%] left-[50%] -translate-x-[50%]">No data available.</p>
       ) : (
-        <div className="overflow-x-auto w-full h-[60vh] ">
+        <div className="overflow-x-auto w-full h-[60vh] scrollbar-thin scrollbar-thumb-zinc-900/20 scrollbar-thumb-rounded-xl scrollbar-track-zinc-100">
           <table className="min-w-max w-full border border-gray-300 text-[0.7rem]">
             <thead>
               <tr className="bg-foreground text-background">
